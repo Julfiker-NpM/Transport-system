@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Home + Next Bus load schedules without login — public read is required.
+    match /bus_schedules/{document=**} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null
+        && request.auth.token.email == "admin@transport.com";
+    }
+
+    // Optional: tighten or remove if you use this collection from the client.
+    match /admins/{document=**} {
+      allow read, write: if request.auth != null
+        && request.auth.token.email == "admin@transport.com";
+    }
+  }
+}

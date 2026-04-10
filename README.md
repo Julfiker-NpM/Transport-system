@@ -45,21 +45,26 @@ const ADMIN_EMAILS = ["admin@transport.com"];
 
 ### Firestore rules
 
-To allow the admin to read and write `bus_schedules`, use rules like:
+The **home** and **next bus** pages read `bus_schedules` **without logging in**. Rules must allow **public read** on that collection, and restrict **writes** to your admin account only.
+
+In **Firebase Console → Firestore Database → Rules**, use something like this (same admin email as in `ADMIN_EMAILS` in `AuthContext.tsx`):
 
 ```js
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /bus_schedules/{document=**} {
-      allow read, write: if request.auth != null
+      allow read: if true;
+      allow create, update, delete: if request.auth != null
         && request.auth.token.email == "admin@transport.com";
     }
   }
 }
 ```
 
-Replace the email with your actual admin email if needed.
+Replace `admin@transport.com` with your real admin email, then **Publish** the rules.
+
+A copy of these rules is in `firestore.rules` in this repo (for reference or `firebase deploy --only firestore` if you use the Firebase CLI).
 
 ## Project structure
 
