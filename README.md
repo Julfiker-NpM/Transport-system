@@ -28,7 +28,8 @@ This app uses Firebase Authentication and Firestore.
 - Create a Firebase project
 - Enable Authentication (Email/Password)
 - Enable Firestore database
-- Add your Firebase config to `src/firebase/config.ts`
+- In Firebase Console → Project settings → Your apps, copy the web app config values
+- Copy `.env.example` to `.env` and fill in the `VITE_FIREBASE_*` variables (never commit `.env`)
 
 ### Admin access
 
@@ -65,7 +66,8 @@ Replace the email with your actual admin email if needed.
 - `src/App.tsx` - routes and navigation
 - `src/pages/user` - public user pages
 - `src/pages/admin` - admin dashboard and form
-- `src/firebase/config.ts` - Firebase initialization
+- `src/firebase/config.ts` - Firebase initialization (reads `VITE_*` from `.env`)
+- `.env.example` - template for required environment variables
 - `src/contexts/AuthContext.tsx` - authentication state
 - `src/services/busService.ts` - Firestore bus schedule service
 
