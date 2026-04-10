@@ -71,6 +71,15 @@ Replace the email with your actual admin email if needed.
 - `src/contexts/AuthContext.tsx` - authentication state
 - `src/services/busService.ts` - Firestore bus schedule service
 
+## Deploy on Vercel
+
+1. Import this repo in [Vercel](https://vercel.com) and deploy (framework: Vite is detected automatically).
+2. In the Vercel project → **Settings → Environment Variables**, add every variable from `.env.example` (`VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, etc.) for **Production** (and Preview if you want previews to work).
+3. **Redeploy** after saving env vars (Deployments → … → Redeploy).
+4. In **Firebase Console → Authentication → Settings → Authorized domains**, add your Vercel URL (e.g. `your-app.vercel.app`) and any custom domain. Without this, sign-in can fail on the live site.
+
+`vercel.json` includes a SPA rewrite so routes like `/admin` or `/login` load the app instead of 404.
+
 ## Notes
 
 - No admin account is stored in code, only the allowed admin email list.
