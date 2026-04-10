@@ -25,9 +25,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser);
-      setIsAdmin(!!currentUser && !!currentUser.email && ADMIN_EMAILS.includes(currentUser.email));
+      setIsAdmin(
+        !!currentUser &&
+          !!currentUser.email &&
+          ADMIN_EMAILS.includes(currentUser.email)
+      );
       setLoading(false);
     });
 
@@ -35,10 +43,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
+    if (!auth) {
+      throw new Error(
+        "Firebase is not configured. Add VITE_FIREBASE_* in Vercel Environment Variables and redeploy."
+      );
+    }
     await signInWithEmailAndPassword(auth, email, password);
   };
 
   const logout = async () => {
+    if (!auth) return;
     await signOut(auth);
   };
 

@@ -6,6 +6,7 @@ import UserHome from "./pages/user/UserHome";
 import NextBus from "./pages/user/NextBus";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { isFirebaseConfigured } from "./firebase/config";
 
 function AppRoutes() {
   const { user, isAdmin, logout } = useAuth();
@@ -65,7 +66,33 @@ function AppRoutes() {
   );
 }
 
+function MissingFirebaseConfig() {
+  return (
+    <div className="app-shell">
+      <main className="page-card" style={{ maxWidth: 560, margin: "2rem auto" }}>
+        <h1 className="page-title">Configuration required</h1>
+        <p className="status-error" style={{ marginTop: "1rem" }}>
+          Firebase environment variables are missing on this deployment, so the app cannot start.
+        </p>
+        <p style={{ marginTop: "1rem" }}>
+          In Vercel: open your project → <strong>Settings → Environment Variables</strong>, add every
+          variable from <code>.env.example</code> (<code>VITE_FIREBASE_API_KEY</code>,{" "}
+          <code>VITE_FIREBASE_AUTH_DOMAIN</code>, etc.), apply to <strong>Production</strong>, then{" "}
+          <strong>Redeploy</strong>.
+        </p>
+        <p style={{ marginTop: "1rem", color: "var(--muted)" }}>
+          Variables must be present at <em>build</em> time (Vite embeds <code>VITE_*</code> into the bundle).
+        </p>
+      </main>
+    </div>
+  );
+}
+
 function App() {
+  if (!isFirebaseConfigured) {
+    return <MissingFirebaseConfig />;
+  }
+
   return (
     <AuthProvider>
       <BrowserRouter>
